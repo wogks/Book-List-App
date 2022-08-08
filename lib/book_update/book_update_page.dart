@@ -41,6 +41,7 @@ class _UpdateBookScreenState extends State<UpdateBookScreen> {
       ),
       body: Column(
         children: [
+          const SizedBox(height: 40,),
           TextField(
             controller: _titleTextController,
             decoration: const InputDecoration(
@@ -48,6 +49,7 @@ class _UpdateBookScreenState extends State<UpdateBookScreen> {
               labelText: '제목',
             ),
           ),
+          const SizedBox(height: 40,),
           TextField(
             controller: _authorTextController,
             decoration: const InputDecoration(

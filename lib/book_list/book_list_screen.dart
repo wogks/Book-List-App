@@ -37,17 +37,12 @@ class BookListScreen extends StatelessWidget {
             return ListView(
               children: snapshot.data!.docs.map((DocumentSnapshot document) {
                 Book book = document.data()! as Book;
-                return Dismissible(
-                  onDismissed: (_) {
-                    viewModel.deleteBook(document.id);
-                  },
-                  background: Container(
-                    alignment: Alignment.centerLeft,
-                    color: Colors.red,
-                    child: const Icon(Icons.delete, color: Colors.white),
-                  ),
-                  key: ValueKey(document.id),
-                  child: ListTile(
+                return  ListTile(
+                  trailing: IconButton(
+                    onPressed: () {
+                      BookListViewModel().deleteBook(document.id);
+                    },
+                    icon: Icon(Icons.delete_forever)),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -62,8 +57,8 @@ class BookListScreen extends StatelessWidget {
                       width: 100,
                       height: 100,
                     ),
-                  ),
-                );
+                  );
+                
               }
               ).toList(),
             );
