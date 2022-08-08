@@ -1,15 +1,12 @@
-import 'dart:ffi';
 import 'dart:typed_data';
-
-import 'package:bookapp/add_book/add_book_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'add_book_view_model.dart';
+
 class AddBookScreen extends StatefulWidget {
-  AddBookScreen({Key? key}) : super(key: key);
-  final viewModel = AddBookViewModel();
+  const AddBookScreen({Key? key}) : super(key: key);
+
   @override
   State<AddBookScreen> createState() => _AddBookScreenState();
 }
@@ -17,8 +14,12 @@ class AddBookScreen extends StatefulWidget {
 class _AddBookScreenState extends State<AddBookScreen> {
   final _titleTextController = TextEditingController();
   final _authorTextController = TextEditingController();
-  final ImagePicker _picker = ImagePicker();
+
   final viewModel = AddBookViewModel();
+
+  final ImagePicker _picker = ImagePicker();
+
+  // byte array
   Uint8List? _bytes;
 
   @override
@@ -31,52 +32,88 @@ class _AddBookScreenState extends State<AddBookScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('도서 추가'),
-        ),
-        body: Column(
-          children: [
-            GestureDetector(
-              onTap: (() async {
-                XFile? image =
-                    await _picker.pickImage(source: ImageSource.gallery);
-                if (image != null) {
-                  _bytes = await image.readAsBytes();
+      appBar: AppBar(
+        title: const Text('도서 추가'),
+      ),
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              GestureDetector(
+                onTap: () async {
+                  XFile? image =
+                      await _picker.pickImage(source: ImageSource.gallery);
+                  if (image != null) {
+                    // byte array
+                    _bytes = await image.readAsBytes();
+
+                    setState(() {});
+                  }
+                },
+                child: _bytes == null
+                    ? Container(
+                        width: 200,
+                        height: 200,
+                        color: Colors.grey,
+                      )
+                    : Image.memory(_bytes!, width: 200, height: 200),
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                onChanged: (_) {
                   setState(() {});
-                }
-              }),
-              child: _bytes == null
-                  ? Container(
-                      width: 200,
-                      height: 200,
-                      color: Colors.amber,
-                    )
-                  : Image.memory(
-                      _bytes!,
-                      width: 200,
-                      height: 200,
-                    ),
+                },
+                controller: _titleTextController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: '제목',
+                ),
+              ),
+              TextField(
+                onChanged: (_) {
+                  setState(() {});
+                },
+                controller: _authorTextController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: '저자',
+                ),
+              ),
+              ElevatedButton(
+                  onPressed: viewModel.isValid(
+                    _titleTextController.text,
+                    _authorTextController.text,
+                  )
+                      ? null
+                      : () async {
+                          setState(() {
+                            viewModel.startLoading();
+                          });
+
+                          await viewModel.addBook(
+                            title: _titleTextController.text,
+                            author: _authorTextController.text,
+                            bytes: _bytes,
+                          );
+
+                          setState(() {
+                            viewModel.endLoading();
+                          });
+
+                          Navigator.pop(context);
+                        },
+                  child: const Text('도서 추가')),
+            ],
+          ),
+          if (viewModel.isLoading)
+            Container(
+              color: Colors.black45,
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
             ),
-            TextField(
-              controller: _titleTextController,
-              decoration: InputDecoration(hintText: '제목'),
-            ),
-            TextField(
-              controller: _authorTextController,
-              decoration: InputDecoration(hintText: '작가'),
-            ),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            viewModel.addBook(
-              title: _titleTextController.text,
-              author: _authorTextController.text,
-              bytes: _bytes,
-            );
-            Navigator.pop(context);
-          },
-          child: Icon(Icons.add),
-        ));
+        ],
+      ),
+    );
   }
 }
