@@ -5,9 +5,14 @@ import '../add_book/add_book_screen.dart';
 import '../book_model.dart/book.dart';
 import '../book_update/book_update_page.dart';
 
-class BookListScreen extends StatelessWidget {
+class BookListScreen extends StatefulWidget {
   BookListScreen({Key? key}) : super(key: key);
 
+  @override
+  State<BookListScreen> createState() => _BookListScreenState();
+}
+
+class _BookListScreenState extends State<BookListScreen> {
   final viewModel = BookListViewModel();
 
   @override
@@ -42,7 +47,7 @@ class BookListScreen extends StatelessWidget {
                     onPressed: () {
                       BookListViewModel().deleteBook(document.id);
                     },
-                    icon: Icon(Icons.delete_forever)),
+                    icon: const Icon(Icons.delete_forever)),
                     onTap: () {
                       Navigator.push(
                         context,

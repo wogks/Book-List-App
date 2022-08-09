@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import '../book_list/book_list_view_model.dart';
 import 'login_view_model.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -11,8 +14,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
-
   final viewModel = LoginViewModel();
+  
 
   @override
   void dispose() {
@@ -48,7 +51,9 @@ class _LoginScreenState extends State<LoginScreen> {
             child: const Text('로그인'),
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              
+            },
             child: const Text('신규 등록'),
           ),
           ElevatedButton(

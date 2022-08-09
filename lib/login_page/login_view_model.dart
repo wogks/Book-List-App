@@ -15,6 +15,7 @@ class LoginViewModel {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
+    
 
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);
