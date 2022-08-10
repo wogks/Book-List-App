@@ -1,4 +1,6 @@
 import 'package:bookapp/book_list/book_list_view_model.dart';
+import 'package:bookapp/login_page/login_screen.dart';
+import 'package:bookapp/root_screen/root_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../add_book/add_book_screen.dart';
@@ -24,6 +26,11 @@ class _BookListScreenState extends State<BookListScreen> {
           IconButton(
             onPressed: () {
               viewModel.logout();
+              Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RootScreen()),
+                      );
             },
             icon: const Icon(Icons.logout),
           ),

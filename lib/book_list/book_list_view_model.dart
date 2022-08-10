@@ -21,6 +21,5 @@ class BookListViewModel {
   void logout() async {
     await _googleSignIn.signOut();
     await FirebaseAuth.instance.signOut();
-    // google signOut
   }
 }
